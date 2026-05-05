@@ -1,0 +1,209 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d">
+
+    <Style x:Key="ListGameItemStyle" TargetType="ListBoxItem">        
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="FocusedOverlayOn">
+                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity"
+                                    From="0" To="1" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="FocusedOverlayOff">
+                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="Opacity"
+                                    From="1" To="0" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="FocusedTitleOn">
+                            <DoubleAnimation Storyboard.TargetName="Title" Storyboard.TargetProperty="Opacity" From="0"
+                                    To="1" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="FocusedTitleOff">
+                            <DoubleAnimation Storyboard.TargetName="Title" Storyboard.TargetProperty="Opacity" From="1"
+                                    To="0" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="FocusedIconOn">
+                            <DoubleAnimation Storyboard.TargetName="Icon" Storyboard.TargetProperty="Opacity" From="0"
+                                    To="1" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="FocusedIconOff">
+                            <DoubleAnimation Storyboard.TargetName="Icon" Storyboard.TargetProperty="Opacity" From="1"
+                                    To="0" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Grid x:Name="MainGrid" Margin="{Settings FullscreenItemSpacingMargin}"
+                            d:DataContext="{x:Static DesignMainViewModel.DesignSelectedGameIntance}"
+                            RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <ScaleTransform x:Name="ScaleTransform" ScaleX="1" ScaleY="1" />
+                        </Grid.RenderTransform>
+                        <ContentPresenter x:Name="Content" />
+                        <Grid x:Name="BorderDarken" Visibility="Collapsed">
+                            <Border Background="#AA000000" />
+                            <Image Height="32" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    RenderOptions.BitmapScalingMode="Fant"
+                                    Source="{ThemeFile 'Assets/Cover/PS5Down.png'}" Stretch="Uniform" />
+                        </Grid>
+                        <Image x:Name="Overlay" HorizontalAlignment="Left" VerticalAlignment="Bottom" Opacity="0"
+                                RenderOptions.BitmapScalingMode="Fant"
+                                Source="{ThemeFile 'Assets/Cover/PS5CoverOverlay.png'}" Stretch="Uniform" />
+                        <Image x:Name="Overlay2" HorizontalAlignment="Left" VerticalAlignment="Bottom" Opacity="0"
+                                RenderOptions.BitmapScalingMode="Fant"
+                                Source="{ThemeFile 'Assets/Cover/PS5CoverOverlay.png'}" Stretch="Uniform" />
+                        <Image x:Name="Overlay3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Opacity="0"
+                                RenderOptions.BitmapScalingMode="Fant"
+                                Source="{ThemeFile 'Assets/Cover/PS5CoverOverlay.png'}" Stretch="Uniform" />
+                        <Image x:Name="SourceIcon" Height="32" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top" Opacity="1"
+                                RenderOptions.BitmapScalingMode="Fant" Source="{ThemeFileBinding Source.Name,
+                                  PathFormat='Assets/Source/{0}.png'}" Tag="True">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Tag}"
+                                                Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <StackPanel Margin="5,0,0,20" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                Orientation="Vertical">
+                            <StackPanel x:Name="Icon" Orientation="Horizontal" Visibility="Collapsed">
+                                <Image x:Name="PlatformSource" Height="32" Margin="10,0,0,0" HorizontalAlignment="Left"
+                                        VerticalAlignment="Top" RenderOptions.BitmapScalingMode="Fant"
+                                        Source="{Binding Platforms[0].Icon, Converter={StaticResource ImageStringToImageConverter}}" />
+                            </StackPanel>
+                            <StackPanel x:Name="Title" Orientation="Horizontal" Visibility="Collapsed">
+                                <TextBlock MinHeight="35" MaxWidth="{Binding ElementName=MainGrid, Path=ActualWidth}"
+                                        MaxHeight="70" Margin="10,7,10,0" Padding="0,0,30,0" HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom" FontFamily="Segoe UI Light" FontSize="26"
+                                        Foreground="White"
+                                        Text="{Binding DisplayName}" TextAlignment="Left"
+                                        TextTrimming="CharacterEllipsis" TextWrapping="WrapWithOverflow" />
+                            </StackPanel>
+                            <StackPanel x:Name="Status" Orientation="Horizontal" Visibility="Collapsed">
+                                <TextBlock Height="25" Margin="10,7,0,0" HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom" FontFamily="Segoe UI Light" FontSize="20"
+                                        Foreground="White" Opacity="0.5"
+                                        Text="{DynamicResource LOCGameIsInstalledTitle}" TextAlignment="Left"
+                                        TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <StackPanel x:Name="Hidden" Orientation="Horizontal" Visibility="Collapsed">
+                                <TextBlock Height="25" Margin="10,7,0,0" HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom" FontFamily="Segoe UI Light" FontSize="20"
+                                        Foreground="White" Opacity="0.5"
+                                        Text="{DynamicResource LOCGameHiddenTitle}" TextAlignment="Left"
+                                        TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Border x:Name="MainBorder" Margin="-6" BorderThickness="3" CornerRadius="3" Opacity="1"
+                                Style="{DynamicResource PS5Border}" Tag="False" Visibility="Hidden">
+                            <Border.CacheMode>
+                                <BitmapCache EnableClearType="False" RenderAtScale="1" SnapsToDevicePixels="False" />
+                            </Border.CacheMode>
+                        </Border>
+                        <Border x:Name="FlashBorder" Margin="0" CornerRadius="0" Opacity="1"
+                                Style="{DynamicResource PS5Cover}" Tag="False" Visibility="Hidden">
+                            <Border.CacheMode>
+                                <BitmapCache EnableClearType="False" RenderAtScale="1" SnapsToDevicePixels="False" />
+                            </Border.CacheMode>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="MainBorder" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="MainBorder" Property="Tag" Value="True" />
+                            <Setter TargetName="FlashBorder" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="FlashBorder" Property="Tag" Value="True" />
+                            <Setter Property="Canvas.ZIndex" Value="90" />
+                        </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsInstalled}" Value="False" />
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}"
+                                        Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="Title" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Icon" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Overlay2" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="Overlay3" Property="Visibility" Value="Collapsed" />
+                            <MultiDataTrigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource FocusedOverlayOff}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedTitleOff}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedIconOff}" />
+                            </MultiDataTrigger.ExitActions>
+                            <MultiDataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource FocusedOverlayOn}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedTitleOn}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedIconOn}" />
+                            </MultiDataTrigger.EnterActions>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsInstalled}" Value="True" />
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsFocused}"
+                                        Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="Title" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Icon" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Overlay2" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="Overlay3" Property="Visibility" Value="Collapsed" />
+                            <MultiDataTrigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource FocusedOverlayOff}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedTitleOff}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedIconOff}" />
+                            </MultiDataTrigger.ExitActions>
+                            <MultiDataTrigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource FocusedOverlayOn}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedTitleOn}" />
+                                <BeginStoryboard Storyboard="{StaticResource FocusedIconOn}" />
+                            </MultiDataTrigger.EnterActions>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Hidden}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="Hidden" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Overlay3" Property="Opacity" Value="1" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsInstalled}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="Status" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Overlay2" Property="Opacity" Value="1" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsInstalled}" Value="False" />
+                                <Condition Binding="{Settings Fullscreen.DarkenUninstalledGamesGrid}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="BorderDarken" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SourceIcon" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=PART_ElemFilters, Path=Visibility}" Value="Visible">
+                            <Setter Property="Focusable" Value="False" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=PART_ElemFiltersAdditional, Path=Visibility}"
+                                Value="Visible">
+                            <Setter Property="Focusable" Value="False" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=PART_ContentFilterItems, Path=Visibility}"
+                                Value="Visible">
+                            <Setter Property="Focusable" Value="False" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
